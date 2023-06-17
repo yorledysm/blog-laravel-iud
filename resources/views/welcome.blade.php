@@ -7,6 +7,9 @@
     <title>Projecto con Laravel</title>
 </head>
 <body>
+
+
+    
     <h1>Bienvenido a mi sitio  web Larabel</h1>
 </body>
 </html>

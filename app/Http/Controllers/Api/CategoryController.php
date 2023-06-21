@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Category;
+//use App\Http\Requests\StoreRequest;
+//use App\Http\Requests\Category\StoreRequest;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Category\StoreRequest;
 use App\Http\Requests\Category\PutRequest;
+use App\Http\Requests\Category\StoreRequest;
+//use App\Http\Requests\Category\PutRequest;
 
 class CategoryController extends Controller
 {
@@ -31,7 +34,8 @@ class CategoryController extends Controller
     public function update(PutRequest $request, Category $category)
     {
         $category->update($request->validated());
-        return response()->json($category);
+        return redirect()->route('category.index')->with('status', 'Categoría actualizada exitosamente');
+
     }
 
     /**

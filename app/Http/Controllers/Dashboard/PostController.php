@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Dashboard;
 use App\Models\Post;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreRequest;
+//use App\Http\Requests\StoreRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
+use App\Http\Requests\Post\StoreRequest;
 
 class PostController extends Controller
 {
@@ -52,7 +53,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        return view('dashboard.post.show', compact('post'));
     }
 
     /**
@@ -60,22 +61,26 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        $task = 'edit';
+        return view('dashboard.post.edit', compact('categories', 'post', 'task'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    
     public function update(Request $request, Post $post)
     {
-        //
+        $data = $request->validated();
+        if (isset($data['image'])) {
+            $data['image'] = $filename = time() . "." . $data['image']->extension();
+            $request->image->move(public_path('images/otro'), $filename);
+        }
+        $post->update($data);
+        return redirect()->route('post.index')->with('status', 'Publicación actualizado');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    
     public function destroy(Post $post)
     {
-        //
+        $post->delete();
+        return redirect()->route('post.index')->with('status', 'Publicación eliminada');
     }
 }

@@ -7,7 +7,9 @@ use App\Models\Category;
 
 
 use Illuminate\Http\Request;
+//use App\Http\Requests\StoreRequest;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Category\StoreRequest;
 
 class CategoryController extends Controller
 {
@@ -16,7 +18,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $categories = Category::paginate(2);
+        return view('dashboard.category.index', compact('categories'));
     }
 
     /**
@@ -24,23 +27,28 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        $category = new Category();
+        
+        return view('dashboard.category.create', compact('category'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        //
+        Category::create($request->validated());
+        return redirect()->route('category.index')->with('status', 'Nueva categoría creada');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Category $category)
+    public function show(string $id)
     {
-        //
+        $category = Category::findOrFail($id);
+
+        return view('dashboard.category.show', compact('category'));
     }
 
     /**
@@ -48,7 +56,8 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        return view('dashboard.category.edit', compact('category'));
+        
     }
 
     /**
@@ -56,7 +65,9 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $category->update($request->validated());
+
+        return redirect()->route('category.index')->with('status', 'Categoría actualizada exitosamente');
     }
 
     /**
@@ -64,6 +75,7 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
+        return to_route("category.index")->with('status', "Registro eliminado.");
     }
 }
